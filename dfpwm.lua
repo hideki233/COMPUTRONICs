@@ -1,3 +1,5 @@
+local dfpwm = {}
+
 local floor = math.floor
 
 function dfpwm.make_decoder()
@@ -11,7 +13,7 @@ function dfpwm.make_decoder()
             local byte = string.byte(chunk, i)
 
             for j = 0, 7 do
-                local bit = (byte >> j) & 1
+                local bit = math.floor(byte / (2^j)) % 2
 
                 local target = bit == 1 and 127 or -128
                 local diff = target - charge

@@ -1,14 +1,14 @@
-local dfpwm = {}
+local speaker = peripheral.find("speaker")
 
-function dfpwm.make_decoder()
-    return function(chunk)
-        local buffer = {}
-        for i = 1, #chunk do
-            local byte = string.byte(chunk, i)
-            buffer[#buffer + 1] = (byte - 128) / 128
-        end
-        return buffer
-    end
+local file = fs.open("ss.dfpwm", "rb")
+
+while true do
+  local chunk = file:read(16 * 1024)
+  if not chunk then break end
+  
+  while not speaker.playAudio(chunk) do
+    os.pullEvent("speaker_audio_empty")
+  end
 end
 
-return dfpwm
+file.close()
